@@ -1,38 +1,72 @@
+const list = [];
+const addButton = document.getElementById('button');
+const input = document.getElementById('input')
 
-
-
-const arr1 = [1,2,3,4,5,6,];
-const arr2 = [1,2,3,4,5,6,];
-const arr3 = [1,2,3,4,5,6,];
-const arr4 = [1,2,3,4,5,6,];
-const arr5 = [1,2,3,4,5,6,];
-
-const arr6 = [...arr1, ...arr2, ...arr3, ...arr4, ...arr5, 7,8,9,10];
-console.log(arr6);
-
-
-const obj = {
-    name: 'John',
-    age: 20,
-    salary: 50000,
-    family: true,
-    height: 175
+function change(id) {
+	const item = list.findIndex((d) => {
+		if (d.id === id) {
+			return true;
+		}
+	})
+	const text = prompt('Текст для изменения')
+	list[item].text = text;
+	render()
 }
 
-const objExtended = {
-    ...obj,
-    key: 1,
-    key1: 2,
-    key2: 3,
+function Deleted(id) {
+	const item = list.findIndex(d => d.id === id)
+	list.splice(item, 1)
+	render(list)
+}
+
+function render() {
+	const mainDiv = document.createElement('div');
+	mainDiv.setAttribute('class', 'list');
+
+	for (let i = 0; i < list.length; i++) {
+		const div = document.createElement('div');
+		div.setAttribute('class', 'todoBlock');
+		const p = document.createElement('p');
+		p.innerText = list[i].text
+		div.append(p);
+
+		const buttons = document.createElement('div');
+		buttons.setAttribute('class', 'actions');
+		const changeButton = document.createElement('button');
+		changeButton.setAttribute('class', 'change');
+		changeButton.setAttribute('class', 'change');
+		changeButton.onclick = () => {
+			change(list[i].id)
+		}
+		changeButton.innerText = "change";
+		const deleteButton = document.createElement('button');
+		deleteButton.setAttribute('class', 'delete');
+		deleteButton.onclick = () => {
+			Deleted(list[i].id).remove()
+		}
+		deleteButton.innerText = "delete";
+		buttons.append(changeButton, deleteButton);
+		div.append(buttons);
+		mainDiv.append(div);
+
+	}
+
+	const form = document.querySelector('.form');
+	document.querySelector('.list').remove();
+	form.append(mainDiv);
 }
 
 
-console.log(objExtended);
-
-const text = document.getElementById('text');
-const send = document.getElementById('send');
-send.addEventListener('click', ()=>{
-    let hello = document.createElement('div');
-    hello.innerText = `hello ${text.value}`;
-    document.body.append(hello);
+addButton.addEventListener('click', function () {
+	const obj = {
+		id: list.length + 1,
+		text: input.value
+	}
+	if (input.value === '') {
+		return false
+	} else {
+		list.push(obj)
+		render()
+	}
+	input.value = '';
 })
